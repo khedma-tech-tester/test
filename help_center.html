@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز المساعدة | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body { background: #020617; color: white; }
+        .faq-item { background: #0f172a; border: 1px solid #1e293b; border-radius: 1.5rem; transition: 0.3s; overflow: hidden; }
+        .faq-answer { max-height: 0; transition: max-height 0.4s ease; background: #1e293b33; }
+        .faq-item.active .faq-answer { max-height: 200px; padding: 20px; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); color: #2563eb; }
+    </style>
+</head>
+<body class="p-6">
+
+    <header class="text-center mt-10 mb-12">
+        <div class="inline-block p-4 bg-blue-600/10 rounded-3xl mb-4">
+            <i class="fas fa-headset text-4xl text-blue-500"></i>
+        </div>
+        <h1 class="text-3xl font-900">كيف يمكننا <span class="text-blue-500">مساعدتك؟</span></h1>
+        <p class="text-slate-400 font-bold mt-2">كل ما تحتاجه حول خدماتنا في المنصورة</p>
+    </header>
+
+    <div class="max-w-2xl mx-auto space-y-4">
+        
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="p-6 flex justify-between items-center cursor-pointer">
+                <h4 class="font-900 text-sm">كيف يتم حساب تكلفة الصيانة؟</h4>
+                <i class="fas fa-chevron-down faq-icon transition-transform"></i>
+            </div>
+            <div class="faq-answer text-xs text-slate-400 font-bold leading-loose">
+                يتم تحديد السعر بناءً على نوع العطل والقطع المطلوبة. يقوم الفني بتقديم عرض سعر (Quotation) داخل الشات، ولك حق القبول أو الرفض قبل البدء.
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="p-6 flex justify-between items-center cursor-pointer">
+                <h4 class="font-900 text-sm">هل يوجد ضمان على المنظفات الخام؟</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer text-xs text-slate-400 font-bold leading-loose">
+                نعم، جميع منتجات مصنع خِدمة تك بالمنصورة تخضع لرقابة جودة صارمة. إذا وجدت اختلافاً في التركيز يمكنك استرجاع المنتج خلال 24 ساعة.
+            </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="p-6 flex justify-between items-center cursor-pointer">
+                <h4 class="font-900 text-sm">كيف أشحن محفظتي في خِدمة تك؟</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer text-xs text-slate-400 font-bold leading-loose">
+                يمكنك الشحن عن طريق فودافون كاش، أو الدفع نقداً لمندوبنا، أو من خلال الكروت البنكية داخل التطبيق.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-16 bg-gradient-to-r from-blue-600 to-blue-800 p-8 rounded-[3rem] text-center shadow-xl shadow-blue-900/40">
+        <h3 class="text-xl font-900 mb-2">لم تجد إجابتك؟</h3>
+        <p class="text-sm font-bold opacity-80 mb-6">فريق الدعم الفني متاح 24 ساعة لخدمتك</p>
+        <button class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-900 shadow-lg">
+            تحدث معنا الآن <i class="fab fa-whatsapp mr-2"></i>
+        </button>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            // إغلاق أي سؤال آخر مفتوح
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if(item !== element) item.classList.remove('active');
+            });
+            // فتح السؤال الحالي
+            element.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

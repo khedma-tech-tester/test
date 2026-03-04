@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز الاستثمار | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #020617; color: #f8fafc; }
+        .invest-card { background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid #334155; border-radius: 2.5rem; overflow: hidden; }
+        .chart-container { height: 200px; width: 100%; }
+        .gold-glow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.15); border-color: #eab308; }
+        .tech-glow { box-shadow: 0 0 20px rgba(37, 99, 235, 0.15); border-color: #2563eb; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <header class="max-w-6xl mx-auto flex justify-between items-center mb-12">
+        <div>
+            <h1 class="text-3xl font-900">مركز <span class="text-blue-500">الاستثمار</span></h1>
+            <p class="text-slate-400 font-bold">نمّي مدخراتك مع صناديق خِدمة تك الذكية</p>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800">
+            <p class="text-xs font-black text-slate-500 mb-1">رصيدك القابل للاستثمار</p>
+            <p id="user-balance" class="text-xl font-900 text-green-500">0.00 ج.م</p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="invest-card gold-glow p-8 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-14 h-14 bg-yellow-500/20 text-yellow-500 rounded-2xl flex items-center justify-center text-2xl">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <span class="bg-yellow-500 text-slate-900 px-4 py-1 rounded-full text-xs font-black">عائد سنوي متوقع 24%</span>
+                </div>
+                <h3 class="text-2xl font-900 mb-2">صندوق الذهب الرقمي</h3>
+                <p class="text-slate-400 text-sm font-bold mb-6">استثمار آمن يحمي أموالك من التضخم عبر شراء سبائك ذهبية رقمية.</p>
+                <div class="chart-container mb-6">
+                    <canvas id="goldChart"></canvas>
+                </div>
+            </div>
+            <button onclick="openInvestModal('gold')" class="w-full py-4 bg-yellow-500 text-slate-900 rounded-xl font-900 text-lg hover:scale-105">ابدأ الاستثمار الآن</button>
+        </div>
+
+        <div class="invest-card tech-glow p-8 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-6">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-500 rounded-2xl flex items-center justify-center text-2xl">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <span class="bg-blue-500 text-white px-4 py-1 rounded-full text-xs font-black">عائد متغير مرتفع</span>
+                </div>
+                <h3 class="text-2xl font-900 mb-2">صندوق التقنية والابتكار</h3>
+                <p class="text-slate-400 text-sm font-bold mb-6">استثمر في مشاريع خِدمة تك التوسعية ومعدات الصيانة المتطورة.</p>
+                <div class="chart-container mb-6">
+                    <canvas id="techChart"></canvas>
+                </div>
+            </div>
+            <button onclick="openInvestModal('tech')" class="w-full py-4 bg-blue-600 text-white rounded-xl font-900 text-lg hover:scale-105">ابدأ الاستثمار الآن</button>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // تحديث الرصيد لحظياً
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                onSnapshot(doc(db, "users", user.uid), (d) => {
+                    document.getElementById('user-balance').innerText = (d.data()?.wallet || 0).toLocaleString() + " ج.م";
+                });
+            }
+        });
+
+        // رسوم بيانية تجريبية لنبض السوق
+        const createChart = (id, color) => {
+            const ctx = document.getElementById(id).getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        data: [12, 19, 15, 25, 22, 30],
+                        borderColor: color,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false } }
+                }
+            });
+        };
+
+        createChart('goldChart', '#eab308');
+        createChart('techChart', '#2563eb');
+
+        window.openInvestModal = (type) => {
+            alert(`سيتم فتح بوابة استثمار ${type === 'gold' ? 'الذهب' : 'التكنولوجيا'}... تأكد من شحن محفظتك أولاً.`);
+        };
+    </script>
+</body>
+</html>

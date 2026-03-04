@@ -1,0 +1,37 @@
+<div id="notification-toast" class="fixed top-[-100px] left-1/2 -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-all duration-500">
+    <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-700 p-4 rounded-3xl shadow-2xl flex items-center gap-4">
+        <div id="notify-icon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl">
+            <i class="fas fa-bell"></i>
+        </div>
+        <div class="flex-1">
+            <h4 id="notify-title" class="text-white font-900 text-sm">تنبيه جديد</h4>
+            <p id="notify-body" class="text-slate-400 text-xs font-bold mt-1">هذا نص تجريبي للتنبيه</p>
+        </div>
+        <button onclick="hideNotify()" class="text-slate-500 p-2"><i class="fas fa-times"></i></button>
+    </div>
+</div>
+
+<script>
+    function showNotify(title, body, type = 'info') {
+        const toast = document.getElementById('notification-toast');
+        const iconBox = document.getElementById('notify-icon');
+        
+        // تغيير الألوان بناءً على النوع
+        const styles = {
+            success: 'bg-green-500/20 text-green-500',
+            error: 'bg-red-500/20 text-red-500',
+            info: 'bg-blue-500/20 text-blue-500'
+        };
+
+        iconBox.className = `w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${styles[type]}`;
+        document.getElementById('notify-title').innerText = title;
+        document.getElementById('notify-body').innerText = body;
+
+        toast.style.top = '20px';
+        setTimeout(hideNotify, 5000); // إخفاء تلقائي بعد 5 ثوانٍ
+    }
+
+    function hideNotify() {
+        document.getElementById('notification-toast').style.top = '-100px';
+    }
+</script>

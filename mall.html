@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مول المنظفات | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #fdfdfd; color: #0f172a; }
+        .product-card { background: white; border-radius: 2.5rem; border: 1px solid #f1f5f9; position: relative; overflow: hidden; }
+        .product-card:hover { transform: translateY(-10px); shadow: 0 20px 40px -15px rgba(0,0,0,0.05); }
+        .badge { position: absolute; top: 20px; right: 20px; background: #ef4444; color: white; padding: 5px 15px; border-radius: 12px; font-weight: 900; font-size: 12px; z-index: 10; }
+        .cart-panel { position: fixed; left: -100%; top: 0; width: 400px; height: 100vh; background: white; z-index: 200; box-shadow: 20px 0 50px rgba(0,0,0,0.1); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cart-open { left: 0; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <nav class="sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-100 z-50 p-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button onclick="history.back()" class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-blue-600">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <h1 class="text-3xl font-900 tracking-tighter">مول <span class="text-blue-600">المنظفات</span></h1>
+            </div>
+            <button onclick="toggleCart()" class="relative w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl">
+                <i class="fas fa-shopping-basket text-xl"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-600 w-6 h-6 rounded-full text-[10px] flex items-center justify-center border-2 border-white">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="max-w-7xl mx-auto px-6 py-12">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[3rem] p-12 text-white relative overflow-hidden">
+            <div class="relative z-10 max-w-lg">
+                <h2 class="text-5xl font-900 mb-6 leading-tight">منتجاتنا بتركيبات <br> احترافية خاصة 🧪</h2>
+                <p class="text-blue-100 font-bold text-lg mb-8">خصم 15% على أول طلب منظفات من داخل المنصورة بحد أدنى 200 جنيهاً.</p>
+                <button class="bg-white text-blue-600 px-10 py-4 rounded-2xl font-900 text-lg shadow-xl">تسوق العروض</button>
+            </div>
+            <i class="fas fa-pump-soap absolute -bottom-10 -left-10 text-[20rem] text-white/10 -rotate-12"></i>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-32">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8" id="products-grid">
+        </div>
+    </main>
+
+    <div id="cart-panel" class="cart-panel p-8 flex flex-col">
+        <div class="flex justify-between items-center mb-10">
+            <h3 class="text-2xl font-900">سلة المشتريات</h3>
+            <button onclick="toggleCart()" class="text-slate-400"><i class="fas fa-times text-2xl"></i></button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto space-y-6">
+        </div>
+        <div class="pt-8 border-t border-slate-100 space-y-4">
+            <div class="flex justify-between font-900 text-xl">
+                <span>الإجمالي:</span>
+                <span id="cart-total">0 ج.م</span>
+            </div>
+            <button onclick="checkout()" class="w-full py-6 bg-blue-600 text-white rounded-[2rem] font-900 text-xl shadow-xl">إتمام الطلب الآن</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let cart = [];
+
+        onSnapshot(collection(db, "products"), (snapshot) => {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                grid.innerHTML += `
+                    <div class="product-card group">
+                        ${p.discount ? `<div class="badge">خصم ${p.discount}%</div>` : ''}
+                        <div class="h-64 bg-slate-50 flex items-center justify-center p-8">
+                            <img src="${p.image}" class="max-h-full group-hover:scale-110 transition-transform">
+                        </div>
+                        <div class="p-8">
+                            <p class="text-xs font-black text-blue-600 uppercase mb-2">${p.category}</p>
+                            <h4 class="text-xl font-900 mb-4">${p.name}</h4>
+                            <div class="flex justify-between items-center">
+                                <p class="text-2xl font-900 tracking-tighter">${p.price} <span class="text-sm font-bold">ج.م</span></p>
+                                <button onclick="addToCart('${doc.id}', '${p.name}', ${p.price})" class="w-12 h-12 bg-slate-900 text-white rounded-xl hover:bg-blue-600"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        window.addToCart = (id, name, price) => {
+            cart.push({id, name, price});
+            updateCartUI();
+        };
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const itemsCont = document.getElementById('cart-items');
+            itemsCont.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                itemsCont.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl">
+                        <div>
+                            <p class="font-900 text-sm">${item.name}</p>
+                            <p class="text-blue-600 font-bold">${item.price} ج.م</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').innerText = total + " ج.م";
+        }
+
+        window.removeFromCart = (index) => { cart.splice(index, 1); updateCartUI(); };
+        window.toggleCart = () => document.getElementById('cart-panel').classList.toggle('cart-open');
+
+        window.checkout = async () => {
+            if(!auth.currentUser) return alert("سجل دخول لإتمام الشراء");
+            if(cart.length === 0) return alert("السلة فارغة");
+            try {
+                await addDoc(collection(db, "orders_products"), {
+                    userId: auth.currentUser.uid,
+                    items: cart,
+                    status: 'processing',
+                    timestamp: serverTimestamp()
+                });
+                alert("تم استلام طلبك! سيتم التواصل معك للشحن.");
+                cart = [];
+                updateCartUI();
+                toggleCart();
+            } catch (err) { alert(err.message); }
+        };
+    </script>
+</body>
+</html>

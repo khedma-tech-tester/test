@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الدخول | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #020617; color: white; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+        .input-field { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05); color: white; width: 100%; padding: 1.25rem; border-radius: 1.5rem; outline: none; }
+        .input-field:focus { border-color: #2563eb; background: rgba(30, 41, 59, 0.8); }
+        .tab-btn { padding: 1rem 2rem; border-radius: 1rem; font-weight: 900; cursor: pointer; }
+        .tab-active { background: #2563eb; color: white; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+    <div class="absolute top-0 left-0 w-full h-full -z-10">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px]"></div>
+    </div>
+    <div class="w-full max-w-[550px] glass p-8 md:p-12 rounded-[3.5rem] shadow-2xl">
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-blue-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl rotate-3">
+                <i class="fas fa-shield-halved text-3xl"></i>
+            </div>
+            <h1 class="text-4xl font-900 mb-2 tracking-tighter">مرحباً بك في خِدمة تك</h1>
+            <p class="text-slate-400 font-bold">سجل دخولك للوصول إلى لوحة التحكم</p>
+        </div>
+        <div class="flex bg-slate-900/50 p-2 rounded-2xl mb-10">
+            <div id="tab-login" onclick="switchMode('login')" class="tab-btn tab-active flex-1 text-center">دخول</div>
+            <div id="tab-register" onclick="switchMode('register')" class="tab-btn flex-1 text-center">إنشاء حساب</div>
+        </div>
+        <form id="auth-form" class="space-y-5">
+            <div id="register-fields" class="hidden space-y-5">
+                <input type="text" id="full-name" placeholder="الاسم الكامل" class="input-field font-bold">
+                <select id="user-role" class="input-field font-bold text-white bg-slate-800">
+                    <option value="client">عميل (طلب خدمات)</option>
+                    <option value="provider">فني محترف (تقديم خدمات)</option>
+                </select>
+                <input type="tel" id="phone" placeholder="رقم الهاتف" class="input-field font-bold">
+            </div>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" class="input-field font-bold" required>
+            <input type="password" id="password" placeholder="كلمة المرور" class="input-field font-bold" required>
+            <button type="submit" id="submit-btn" class="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.5rem] font-900 text-xl shadow-xl shadow-blue-900/20 mt-4">تسجيل الدخول</button>
+        </form>
+        <div class="mt-8 text-center">
+            <button onclick="googleSignIn()" class="flex items-center justify-center gap-4 w-full p-4 border border-white/10 rounded-2xl hover:bg-white/5 font-bold">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6">
+                الدخول بواسطة جوجل
+            </button>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let mode = 'login';
+        window.switchMode = (newMode) => {
+            mode = newMode;
+            const regFields = document.getElementById('register-fields');
+            const subBtn = document.getElementById('submit-btn');
+            const tabLogin = document.getElementById('tab-login');
+            const tabReg = document.getElementById('tab-register');
+            if(mode === 'register') {
+                regFields.classList.remove('hidden');
+                subBtn.innerText = 'إنشاء الحساب الجديد';
+                tabReg.classList.add('tab-active');
+                tabLogin.classList.remove('tab-active');
+            } else {
+                regFields.classList.add('hidden');
+                subBtn.innerText = 'تسجيل الدخول';
+                tabLogin.classList.add('tab-active');
+                tabReg.classList.remove('tab-active');
+            }
+        };
+        document.getElementById('auth-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            try {
+                if(mode === 'register') {
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    const user = res.user;
+                    await setDoc(doc(db, "users", user.uid), {
+                        name: document.getElementById('full-name').value,
+                        role: document.getElementById('user-role').value,
+                        phone: document.getElementById('phone').value,
+                        wallet: 0,
+                        uid: user.uid,
+                        createdAt: new Date()
+                    });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                }
+                redirectUser(auth.currentUser.uid);
+            } catch (err) { alert("خطأ: " + err.message); }
+        };
+        async function redirectUser(uid) {
+            const userDoc = await getDoc(doc(db, "users", uid));
+            if(userDoc.exists()) {
+                const data = userDoc.data();
+                if(data.role === 'admin') window.location.href = 'admin.html';
+                else if(data.role === 'provider') window.location.href = 'provider_dash.html';
+                else window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

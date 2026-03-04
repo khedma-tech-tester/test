@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم الإدارية | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body { background: #020617; color: white; }
+        .stat-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 2rem; padding: 2rem; }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-12">
+            <h1 class="text-3xl font-900">نظرة عامة على <span class="text-blue-500">خِدمة تك</span></h1>
+            <div class="bg-green-500/10 text-green-500 px-4 py-2 rounded-xl text-xs font-black">النظام يعمل بكفاءة</div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="stat-card">
+                <p class="text-slate-400 font-bold text-xs mb-2">إجمالي مبيعات النظام</p>
+                <h2 id="total-rev" class="text-3xl font-900">0.00 ج.م</h2>
+                <div class="mt-4 text-[10px] text-blue-500 font-black">صافي أرباحك: <span id="net-profit">0</span> ج.م</div>
+            </div>
+            <div class="stat-card">
+                <p class="text-slate-400 font-bold text-xs mb-2">طلبات صيانة ناجحة</p>
+                <h2 id="orders-count" class="text-3xl font-900">0</h2>
+                <div class="mt-4 text-[10px] text-green-500 font-black">بمعدل 15 طلب/يوم</div>
+            </div>
+            <div class="stat-card">
+                <p class="text-slate-400 font-bold text-xs mb-2">فنيين معتمدين</p>
+                <h2 id="providers-count" class="text-3xl font-900">0</h2>
+                <div class="mt-4 text-[10px] text-purple-500 font-black">نشطين في المنصورة</div>
+            </div>
+        </div>
+
+        <div class="stat-card overflow-hidden">
+            <h3 class="text-xl font-900 mb-6">أحدث طلبات الصيانة</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead>
+                        <tr class="text-slate-500 border-b border-slate-800">
+                            <th class="pb-4">العميل</th>
+                            <th class="pb-4">الخدمة</th>
+                            <th class="pb-4">الفني</th>
+                            <th class="pb-4">الحالة</th>
+                            <th class="pb-4">المبلغ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-orders-table" class="font-bold">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

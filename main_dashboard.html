@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background: #020617; color: white; padding-bottom: 100px; }
+        .service-card { 
+            background: #0f172a; border: 1px solid #1e293b; border-radius: 2.5rem; 
+            overflow: hidden; position: relative;
+        }
+        .service-card:hover { transform: translateY(-10px); border-color: #2563eb; box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); }
+        .category-badge { position: absolute; top: 1rem; right: 1rem; background: rgba(37, 99, 235, 0.9); padding: 5px 15px; border-radius: 1rem; font-size: 10px; font-weight: 900; z-index: 10; }
+        .bottom-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border-top: 1px solid #1e293b; }
+    </style>
+</head>
+<body class="p-6">
+
+    <header class="flex justify-between items-center mb-10">
+        <div class="flex items-center gap-4">
+            <img src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff" class="w-12 h-12 rounded-2xl border-2 border-blue-600">
+            <div>
+                <p class="text-xs text-slate-500 font-bold">أهلاً بك في المنصورة 👋</p>
+                <h2 class="text-lg font-900">يا بطل خِدمة تك</h2>
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <button class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800 relative">
+                <i class="fas fa-bell text-slate-400"></i>
+                <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mb-10 relative">
+        <i class="fas fa-search absolute right-5 top-5 text-slate-500"></i>
+        <input type="text" placeholder="ما هي الخدمة التي تحتاجها اليوم؟" class="w-full bg-slate-900 border border-slate-800 py-5 pr-14 pl-6 rounded-[2rem] outline-none focus:ring-2 ring-blue-600 font-bold">
+    </div>
+
+    <h3 class="text-xl font-900 mb-6 flex items-center gap-3">
+        <i class="fas fa-th-large text-blue-500"></i> جميع الخدمات
+    </h3>
+
+    <div class="grid grid-cols-2 gap-5">
+        
+        <div onclick="location.href='booking.html?cat=plumbing'" class="service-card group">
+            <span class="category-badge">صيانة</span>
+            <div class="h-32 bg-gradient-to-br from-blue-600/20 to-transparent flex items-center justify-center">
+                <i class="fas fa-faucet-drip text-4xl text-blue-500 group-hover:scale-125"></i>
+            </div>
+            <div class="p-5 text-center">
+                <h4 class="font-900 text-sm">السباكة الذكية</h4>
+                <p class="text-[10px] text-slate-500 mt-1 font-bold">إصلاح وتركيب</p>
+            </div>
+        </div>
+
+        <div onclick="location.href='booking.html?cat=electricity'" class="service-card group">
+            <span class="category-badge">صيانة</span>
+            <div class="h-32 bg-gradient-to-br from-yellow-600/20 to-transparent flex items-center justify-center">
+                <i class="fas fa-bolt text-4xl text-yellow-500 group-hover:scale-125"></i>
+            </div>
+            <div class="p-5 text-center">
+                <h4 class="font-900 text-sm">الكهرباء والإضاءة</h4>
+                <p class="text-[10px] text-slate-500 mt-1 font-bold">تأسيس وأعطال</p>
+            </div>
+        </div>
+
+        <div onclick="location.href='factory_orders.html'" class="service-card group">
+            <span class="category-badge bg-green-600">المصنع</span>
+            <div class="h-32 bg-gradient-to-br from-green-600/20 to-transparent flex items-center justify-center">
+                <i class="fas fa-flask-vial text-4xl text-green-500 group-hover:scale-125"></i>
+            </div>
+            <div class="p-5 text-center">
+                <h4 class="font-900 text-sm">مول المنظفات</h4>
+                <p class="text-[10px] text-slate-500 mt-1 font-bold">خامات وتركيبات</p>
+            </div>
+        </div>
+
+        <div onclick="location.href='booking.html?cat=ac'" class="service-card group">
+            <span class="category-badge bg-cyan-600">تبريد</span>
+            <div class="h-32 bg-gradient-to-br from-cyan-600/20 to-transparent flex items-center justify-center">
+                <i class="fas fa-snowflake text-4xl text-cyan-500 group-hover:scale-125"></i>
+            </div>
+            <div class="p-5 text-center">
+                <h4 class="font-900 text-sm">تكييف وتبريد</h4>
+                <p class="text-[10px] text-slate-500 mt-1 font-bold">شحن وصيانة</p>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 p-5 flex justify-around items-center z-50">
+        <button class="text-blue-500 flex flex-col items-center gap-1">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-[10px] font-black">الرئيسية</span>
+        </button>
+        <button onclick="location.href='orders_history.html'" class="text-slate-500 flex flex-col items-center gap-1">
+            <i class="fas fa-clipboard-list text-xl"></i>
+            <span class="text-[10px] font-black">طلباتي</span>
+        </button>
+        <button onclick="location.href='wallet.html'" class="text-slate-500 flex flex-col items-center gap-1">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[10px] font-black">المحفظة</span>
+        </button>
+        <button onclick="location.href='user_profile_edit.html'" class="text-slate-500 flex flex-col items-center gap-1">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-[10px] font-black">حسابي</span>
+        </button>
+    </nav>
+
+</body>
+</html>

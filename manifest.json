@@ -1,0 +1,18 @@
+{
+  "short_name": "خِدمة تك",
+  "name": "خِدمة تك - خدمات الصيانة والمنظفات",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1063/1063196.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#020617",
+  "theme_color": "#2563eb",
+  "display": "standalone",
+  "orientation": "portrait",
+  "description": "منصة صيانة منزلية ومنظفات خام في مدينة المنصورة"
+}

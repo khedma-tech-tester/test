@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كاشف المقاطعة الذكي | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #020617; color: white; overflow: hidden; }
+        .scanner-frame { position: relative; width: 100%; height: 70vh; background: #000; border-radius: 0 0 3rem 3rem; overflow: hidden; }
+        .scan-overlay { position: absolute; inset: 0; border: 2px solid transparent; background: linear-gradient(45deg, #2563eb 0%, transparent 40%, transparent 60%, #2563eb 100%) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .laser { position: absolute; width: 100%; height: 4px; background: #2563eb; box-shadow: 0 0 20px #2563eb; top: 0; animation: scan 2s infinite linear; }
+        @keyframes scan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+        .result-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #0f172a; border-radius: 3rem 3rem 0 0; padding: 40px; z-index: 100; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-top: 2px solid #1e293b; }
+        .sheet-open { bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="scanner-frame">
+        <video id="video" class="w-full h-full object-cover"></video>
+        <div class="scan-overlay"></div>
+        <div class="laser"></div>
+        <div class="absolute top-10 left-0 w-full flex justify-between px-8">
+            <button onclick="history.back()" class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center"><i class="fas fa-chevron-right"></i></button>
+            <h1 class="text-xl font-900">كاشف المقاطعة</h1>
+            <button id="torch-btn" class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center"><i class="fas fa-bolt"></i></button>
+        </div>
+    </div>
+
+    <div class="p-8 text-center">
+        <p class="text-slate-400 font-bold mb-4">وجه الكاميرا نحو علامة المنتج أو الباركود</p>
+        <button onclick="startAnalysis()" id="scan-trigger" class="bg-blue-600 px-10 py-4 rounded-2xl font-900 shadow-xl shadow-blue-900/40">بدء التحليل البصري</button>
+    </div>
+
+    <div id="result-sheet" class="result-sheet">
+        <div class="w-20 h-1.5 bg-slate-700 rounded-full mx-auto mb-8"></div>
+        <div id="result-content" class="space-y-6">
+            <div class="flex items-center gap-4 text-red-500">
+                <i class="fas fa-circle-exclamation text-4xl"></i>
+                <div>
+                    <h3 class="text-2xl font-900">منتج مقاطع!</h3>
+                    <p class="text-sm font-bold opacity-80" id="boycott-reason">هذه الشركة تدعم الكيان بشكل مباشر.</p>
+                </div>
+            </div>
+            
+            <div class="bg-slate-900 p-6 rounded-2xl">
+                <p class="text-xs font-black text-slate-500 mb-4 uppercase">البديل المصري المتوفر:</p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center"><i class="fas fa-flask"></i></div>
+                        <div>
+                            <p id="alt-name" class="font-900">منظف "تك" الاحترافي</p>
+                            <p class="text-xs font-bold text-green-500">متوفر في المول - 45 ج.م</p>
+                        </div>
+                    </div>
+                    <button class="bg-white text-slate-900 px-4 py-2 rounded-lg font-900 text-xs">شراء</button>
+                </div>
+            </div>
+            <button onclick="closeResult()" class="w-full py-4 text-slate-400 font-bold">إغلاق وتجربة منتج آخر</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { AIScanner } from './ai_scanner.js';
+
+        const video = document.getElementById('video');
+        const sheet = document.getElementById('result-sheet');
+
+        // تشغيل الكاميرا فور الدخول
+        window.onload = async () => {
+            const success = await AIScanner.initCamera('#video');
+            if(!success) alert("فشل فتح الكاميرا، تأكد من إعطاء الأذونات");
+        };
+
+        window.startAnalysis = async () => {
+            const btn = document.getElementById('scan-trigger');
+            btn.innerText = "جاري التحليل...";
+            btn.classList.add('animate-pulse');
+
+            const result = await AIScanner.analyzeFrame();
+            
+            if(result && result.isBoycott) {
+                document.getElementById('boycott-reason').innerText = result.reason;
+                sheet.classList.add('sheet-open');
+            } else {
+                alert("المنتج آمن أو غير مدرج في قوائمنا حالياً.");
+            }
+
+            btn.innerText = "بدء التحليل البصري";
+            btn.classList.remove('animate-pulse');
+        };
+
+        window.closeResult = () => sheet.classList.remove('sheet-open');
+    </script>
+</body>
+</html>

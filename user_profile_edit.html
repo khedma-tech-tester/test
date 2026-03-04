@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعديل الحساب | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { background: #020617; color: #f8fafc; min-height: 100vh; }
+        .input-group { background: #0f172a; border: 1px solid #1e293b; border-radius: 1.5rem; padding: 0.5rem 1.5rem; }
+        .input-group:focus-within { border-color: #2563eb; box-shadow: 0 0 15px rgba(37, 99, 235, 0.1); }
+        .profile-ring { padding: 4px; background: linear-gradient(45deg, #2563eb, #38bdf8); border-radius: 50%; }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <div class="max-w-2xl mx-auto">
+        <header class="flex justify-between items-center mb-12">
+            <button onclick="history.back()" class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center border border-slate-800">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <h1 class="text-2xl font-900">تعديل <span class="text-blue-500">الملف الشخصي</span></h1>
+            <div class="w-12"></div> </header>
+
+        <form id="edit-profile-form" class="space-y-8">
+            <div class="flex flex-col items-center justify-center mb-10">
+                <div class="profile-ring relative group">
+                    <img id="profile-preview" src="https://ui-avatars.com/api/?name=User&background=0f172a&color=fff" class="w-32 h-32 rounded-full object-cover border-4 border-[#020617]">
+                    <label for="avatar-upload" class="absolute bottom-0 right-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer border-4 border-[#020617] hover:scale-110">
+                        <i class="fas fa-camera text-sm"></i>
+                        <input type="file" id="avatar-upload" class="hidden" accept="image/*">
+                    </label>
+                </div>
+                <p class="text-xs text-slate-500 mt-4 font-bold">اضغط لتغيير الصورة الشخصية</p>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-black text-slate-400 mb-2 mr-2">الاسم الكامل</label>
+                    <div class="input-group flex items-center">
+                        <i class="fas fa-user text-slate-500 ml-4"></i>
+                        <input type="text" id="full-name" class="w-full bg-transparent py-4 outline-none font-bold" placeholder="أدخل اسمك بالكامل">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-black text-slate-400 mb-2 mr-2">رقم الهاتف (المنصورة)</label>
+                    <div class="input-group flex items-center">
+                        <i class="fas fa-phone text-slate-500 ml-4"></i>
+                        <input type="tel" id="phone-number" class="w-full bg-transparent py-4 outline-none font-bold text-left" dir="ltr" placeholder="01XXXXXXXXX">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-black text-slate-400 mb-2 mr-2">العنوان / المنطقة</label>
+                    <div class="input-group flex items-center">
+                        <i class="fas fa-location-dot text-slate-500 ml-4"></i>
+                        <select id="user-region" class="w-full bg-transparent py-4 outline-none font-bold text-slate-300">
+                            <option value="حي الجامعة">حي الجامعة</option>
+                            <option value="المشاية">المشاية</option>
+                            <option value="توريل">توريل</option>
+                            <option value="جديلة">جديلة</option>
+                            <option value="طلخا">طلخا</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-10 space-y-4">
+                <button type="submit" class="w-full bg-blue-600 py-5 rounded-[2rem] font-900 text-lg shadow-xl shadow-blue-900/20 hover:bg-blue-500">حفظ التعديلات</button>
+                <button type="button" class="w-full bg-red-500/10 text-red-500 py-5 rounded-[2rem] font-900 text-lg border border-red-500/20">حذف الحساب نهائياً</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const auth = getAuth();
+        const db = getFirestore();
+
+        // تحميل البيانات الحالية
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    document.getElementById('full-name').value = data.name || '';
+                    document.getElementById('phone-number').value = data.phone || '';
+                    document.getElementById('user-region').value = data.region || 'حي الجامعة';
+                }
+            }
+        });
+
+        // معالجة تغيير الصورة (معاينة فقط)
+        document.getElementById('avatar-upload').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => document.getElementById('profile-preview').src = event.target.result;
+                reader.readAsDataURL(file);
+            }
+        };
+    </script>
+</body>
+</html>

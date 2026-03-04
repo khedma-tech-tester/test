@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم العليا | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #020617; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        .admin-sidebar { background: #0f172a; border-left: 1px solid #1e293b; width: 300px; position: fixed; height: 100vh; right: 0; top: 0; z-index: 50; }
+        .main-content { margin-right: 300px; padding: 40px; }
+        .stat-card { background: #0f172a; border: 1px solid #1e293b; padding: 30px; border-radius: 2rem; }
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        .data-table tr { background: #0f172a; border-radius: 1rem; }
+        .data-table td, .data-table th { padding: 20px; text-align: right; }
+        .data-table tr td:first-child { border-radius: 0 1rem 1rem 0; }
+        .data-table tr td:last-child { border-radius: 1rem 0 0 1rem; }
+        .action-btn { padding: 8px 16px; border-radius: 12px; font-weight: 700; font-size: 14px; }
+        .btn-delete { background: #ef444420; color: #ef4444; }
+        .btn-edit { background: #2563eb20; color: #2563eb; }
+        @media (max-width: 1024px) { .admin-sidebar { display: none; } .main-content { margin-right: 0; } }
+    </style>
+</head>
+<body>
+    <aside class="admin-sidebar p-8">
+        <div class="flex items-center gap-4 mb-12">
+            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg rotate-3">
+                <i class="fas fa-crown text-white"></i>
+            </div>
+            <h1 class="text-2xl font-900 tracking-tighter">لوحة <span class="text-blue-600">الإدارة</span></h1>
+        </div>
+        <nav class="space-y-4">
+            <div onclick="showSection('overview')" class="flex items-center gap-4 p-4 bg-blue-600 rounded-2xl cursor-pointer">
+                <i class="fas fa-chart-pie"></i>
+                <span class="font-bold">الإحصائيات العامة</span>
+            </div>
+            <div onclick="showSection('users')" class="flex items-center gap-4 p-4 hover:bg-slate-800 rounded-2xl cursor-pointer">
+                <i class="fas fa-users"></i>
+                <span class="font-bold">إدارة المستخدمين</span>
+            </div>
+            <div onclick="showSection('providers')" class="flex items-center gap-4 p-4 hover:bg-slate-800 rounded-2xl cursor-pointer">
+                <i class="fas fa-user-tie"></i>
+                <span class="font-bold">طلبات الفنيين</span>
+            </div>
+            <div onclick="showSection('orders')" class="flex items-center gap-4 p-4 hover:bg-slate-800 rounded-2xl cursor-pointer">
+                <i class="fas fa-box"></i>
+                <span class="font-bold">إدارة الطلبات</span>
+            </div>
+            <div onclick="showSection('settings')" class="flex items-center gap-4 p-4 hover:bg-slate-800 rounded-2xl cursor-pointer">
+                <i class="fas fa-cog"></i>
+                <span class="font-bold">إعدادات النظام</span>
+            </div>
+            <div onclick="logout()" class="flex items-center gap-4 p-4 hover:bg-red-500/10 text-red-500 rounded-2xl cursor-pointer mt-10">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="font-bold">تسجيل الخروج</span>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h2 class="text-4xl font-900 mb-2">أهلاً، المدير العام 👋</h2>
+                <p class="text-slate-400 font-bold">كل ما يحدث في خِدمة تك تحت سيطرتك الآن.</p>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-900 p-4 rounded-[2rem] border border-slate-800">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=2563eb&color=fff" class="w-12 h-12 rounded-xl">
+                <div>
+                    <p class="font-900 text-sm">المدير الرئيسي</p>
+                    <p class="text-xs text-green-500 font-bold">متصل الآن</p>
+                </div>
+            </div>
+        </header>
+
+        <section id="section-overview" class="space-y-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="stat-card">
+                    <p class="text-slate-400 font-bold mb-2">إجمالي المستخدمين</p>
+                    <h3 id="total-users" class="text-4xl font-900">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p class="text-slate-400 font-bold mb-2">رصيد المحافظ الكلي</p>
+                    <h3 id="total-wallets" class="text-4xl font-900">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p class="text-slate-400 font-bold mb-2">طلبات الصيانة</p>
+                    <h3 id="total-orders" class="text-4xl font-900">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p class="text-slate-400 font-bold mb-2">الفنيين النشطين</p>
+                    <h3 id="total-providers" class="text-4xl font-900">0</h3>
+                </div>
+            </div>
+
+            <div class="stat-card overflow-x-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h4 class="text-2xl font-900">آخر المستخدمين المسجلين</h4>
+                    <button class="text-blue-500 font-bold">عرض الكل</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr class="text-slate-400 text-sm">
+                            <th>الاسم</th>
+                            <th>النوع</th>
+                            <th>رقم الهاتف</th>
+                            <th>المحفظة</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="section-settings" class="hidden space-y-10">
+            <div class="stat-card max-w-2xl">
+                <h4 class="text-2xl font-900 mb-8">تحديث نسب أرباح الاستثمار</h4>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-400 mb-2">نسبة صندوق الذهب (%)</label>
+                        <input type="number" id="set-gold-return" class="w-full bg-slate-800 p-4 rounded-xl outline-none focus:ring-2 ring-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-400 mb-2">نسبة صندوق التكنولوجيا (%)</label>
+                        <input type="number" id="set-tech-return" class="w-full bg-slate-800 p-4 rounded-xl outline-none focus:ring-2 ring-blue-600">
+                    </div>
+                    <button onclick="updateGlobalStats()" class="bg-blue-600 w-full py-4 rounded-xl font-900">حفظ الإعدادات العالمية</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, query, orderBy, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'client_gate.html';
+        });
+
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            document.getElementById('total-users').innerText = snapshot.size;
+            let totalWallet = 0;
+            let providersCount = 0;
+            const tableBody = document.getElementById('users-table-body');
+            tableBody.innerHTML = '';
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                totalWallet += (data.wallet || 0);
+                if(data.role === 'provider') providersCount++;
+
+                const row = `
+                    <tr>
+                        <td class="font-bold">${data.name || 'مستخدم غير معروف'}</td>
+                        <td><span class="bg-slate-800 px-3 py-1 rounded-lg text-xs font-bold">${data.role}</span></td>
+                        <td class="font-bold">${data.phone || '---'}</td>
+                        <td class="text-green-500 font-900">${data.wallet || 0} ج.م</td>
+                        <td><span class="w-2 h-2 bg-green-500 inline-block rounded-full ml-2"></span>نشط</td>
+                        <td class="flex gap-2">
+                            <button onclick="editUser('${doc.id}')" class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
+                            <button onclick="deleteUser('${doc.id}')" class="action-btn btn-delete"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            document.getElementById('total-wallets').innerText = totalWallet.toLocaleString() + " ج.م";
+            document.getElementById('total-providers').innerText = providersCount;
+        });
+
+        window.updateGlobalStats = async () => {
+            const gold = document.getElementById('set-gold-return').value;
+            const tech = document.getElementById('set-tech-return').value;
+            try {
+                await setDoc(doc(db, "app_settings", "global_stats"), {
+                    gold_return: gold,
+                    tech_return: tech,
+                    updatedAt: new Date()
+                }, { merge: true });
+                alert("تم تحديث الإعدادات بنجاح!");
+            } catch (err) { alert("خطأ: " + err.message); }
+        };
+
+        window.showSection = (sectionId) => {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+        };
+
+        window.logout = () => signOut(auth).then(() => window.location.href = 'client_gate.html');
+    </script>
+</body>
+</html>

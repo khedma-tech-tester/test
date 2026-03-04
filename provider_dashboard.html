@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الفني | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: 0.3s; }
+        body { background: #f1f5f9; }
+        .order-card { background: white; border-radius: 2rem; border: 1px solid #e2e8f0; border-right: 6px solid #2563eb; }
+        .income-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: 2.5rem; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto space-y-8">
+        <header class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-900">مرحباً، فني <span id="provider-name" class="text-blue-600">...</span></h1>
+                <p class="text-slate-500 font-bold text-sm">لديك (3) طلبات جديدة قريبة منك في المنصورة</p>
+            </div>
+            <div class="flex gap-3">
+                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-blue-600">
+                    <i class="fas fa-bell"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="income-card p-8 flex justify-between items-center shadow-xl">
+            <div>
+                <p class="text-slate-400 font-black text-xs uppercase mb-2">أرباحك هذا الأسبوع</p>
+                <h2 id="weekly-income" class="text-4xl font-900">0.00 ج.م</h2>
+            </div>
+            <button class="bg-blue-600 px-6 py-3 rounded-xl font-900 text-sm">سحب الأرباح</button>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl flex justify-between items-center border border-slate-200">
+            <span class="font-900">حالة التوافر للعمل:</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="availability-toggle" class="sr-only peer" checked>
+                <div class="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-500"></div>
+            </label>
+        </div>
+
+        <section class="space-y-6">
+            <h3 class="text-xl font-900 flex items-center gap-3">
+                <i class="fas fa-tools text-blue-600"></i>
+                طلبات صيانة متاحة الآن
+            </h3>
+            <div id="available-orders" class="space-y-4">
+                <div class="order-card p-6 shadow-sm flex flex-wrap justify-between items-center gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-blue-100 text-blue-700 px-3 py-0.5 rounded-lg font-black text-[10px]">سباكة</span>
+                            <span class="text-slate-400 text-[10px] font-bold"><i class="fas fa-location-dot"></i> حي الجامعة</span>
+                        </div>
+                        <h4 class="text-lg font-900">إصلاح عطل في موتور مياه</h4>
+                        <p class="text-sm text-slate-500 font-bold">الموتور يعمل ولكن لا يرفع مياه للشقق العليا...</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <input type="number" placeholder="عرضك (ج.م)" class="w-28 p-3 bg-slate-100 border-none rounded-xl text-center font-bold outline-none ring-2 ring-transparent focus:ring-blue-600">
+                        <button class="bg-slate-900 text-white px-6 py-3 rounded-xl font-900 text-sm hover:bg-blue-600">تقديم عرض</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

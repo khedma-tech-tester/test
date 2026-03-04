@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الفني | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #0f172a; color: white; }
+        .job-card { background: #1e293b; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.05); }
+        .bid-input { background: #0f172a; border: 1px solid #334155; padding: 1rem; border-radius: 1rem; color: white; outline: none; width: 100%; }
+        .bid-input:focus { border-color: #2563eb; }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <header class="max-w-6xl mx-auto flex justify-between items-center mb-12">
+        <div>
+            <h1 class="text-3xl font-900">لوحة الفنيين المحترفين</h1>
+            <p class="text-slate-400 font-bold">تصفح الطلبات المتاحة في المنصورة الآن</p>
+        </div>
+        <div class="bg-blue-600 px-6 py-3 rounded-2xl font-900 shadow-xl shadow-blue-900/20">
+            رصيد العمليات: <span id="provider-wallet">0</span> ج.م
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8" id="jobs-container">
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, where, doc, updateDoc, arrayUnion, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onSnapshot(query(collection(db, "orders"), where("status", "==", "pending")), (snapshot) => {
+            const container = document.getElementById('jobs-container');
+            container.innerHTML = '';
+            snapshot.forEach(jobDoc => {
+                const job = jobDoc.data();
+                container.innerHTML += `
+                    <div class="job-card p-8 space-y-6">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-blue-600/20 text-blue-400 px-4 py-1 rounded-lg font-black text-sm">${job.service}</span>
+                            <span class="text-slate-500 text-xs font-bold italic">ميزانية العميل: ${job.budget} ج.م</span>
+                        </div>
+                        <h3 class="text-xl font-900 leading-relaxed">${job.description}</h3>
+                        <div class="flex items-center gap-3 text-slate-400 text-sm font-bold">
+                            <i class="fas fa-location-dot"></i>
+                            <span>${job.address}</span>
+                        </div>
+                        <div class="pt-6 border-t border-slate-700/50">
+                            <p class="text-sm font-black mb-4">قدم عرضك للعميل:</p>
+                            <div class="flex gap-4">
+                                <input type="number" id="price-${jobDoc.id}" placeholder="السعر" class="bid-input">
+                                <button onclick="window.sendBid('${jobDoc.id}')" class="bg-white text-slate-900 px-8 py-2 rounded-xl font-900 hover:bg-blue-500 hover:text-white">إرسال</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        window.sendBid = async (jobId) => {
+            const user = auth.currentUser;
+            const price = document.getElementById(`price-${jobId}`).value;
+            if(!price) return alert("دخل السعر الأول");
+
+            try {
+                await updateDoc(doc(db, "orders", jobId), {
+                    bids: arrayUnion({
+                        providerId: user.uid,
+                        providerName: user.displayName || "فني محترف",
+                        price: price,
+                        time: new Date()
+                    }),
+                    bidsCount: increment(1)
+                });
+                alert("تم تقديم عرضك بنجاح! العميل هيتواصل معاك لو وافق.");
+            } catch (err) { alert(err.message); }
+        };
+
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                onSnapshot(doc(db, "users", user.uid), (d) => {
+                    document.getElementById('provider-wallet').innerText = d.data()?.wallet || 0;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل العروض | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #f1f5f9; color: #1e293b; }
+        .detail-card { background: white; border-radius: 2rem; border: 1px solid #e2e8f0; }
+        .bid-card { background: white; border-radius: 1.5rem; border-right: 4px solid #2563eb; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <header class="flex justify-between items-center">
+            <button onclick="history.back()" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <h1 class="text-xl font-900">تفاصيل الطلب والعروض</h1>
+            <div class="w-12"></div>
+        </header>
+
+        <section id="order-info" class="detail-card p-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <span id="order-service" class="bg-blue-100 text-blue-700 px-4 py-1 rounded-lg font-black text-xs uppercase">تحميل...</span>
+                    <h2 id="order-desc" class="text-2xl font-900 mt-4 leading-relaxed">جاري تحميل وصف المشكلة...</h2>
+                </div>
+                <p id="order-budget" class="text-2xl font-900 text-slate-400">0 ج.م</p>
+            </div>
+            <div class="flex items-center gap-6 text-sm font-bold text-slate-500 border-t pt-6">
+                <div class="flex items-center gap-2"><i class="fas fa-location-dot"></i> <span id="order-address">---</span></div>
+                <div class="flex items-center gap-2"><i class="fas fa-clock"></i> <span id="order-time">---</span></div>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <h3 class="text-xl font-900 flex items-center gap-3">
+                <i class="fas fa-gavel text-blue-600"></i>
+                عروض الفنيين الحالية
+            </h3>
+            <div id="bids-container" class="space-y-4">
+                <p class="text-center py-10 text-slate-400 font-bold">بانتظار وصول عروض من الفنيين في المنصورة...</p>
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id');
+
+        if(orderId) {
+            onSnapshot(doc(db, "orders", orderId), (docSnap) => {
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('order-service').innerText = data.service;
+                    document.getElementById('order-desc').innerText = data.description;
+                    document.getElementById('order-budget').innerText = data.budget + " ج.م";
+                    document.getElementById('order-address').innerText = data.address;
+                    
+                    const bidsCont = document.getElementById('bids-container');
+                    bidsCont.innerHTML = '';
+                    
+                    if(data.bids && data.bids.length > 0) {
+                        data.bids.forEach((bid, index) => {
+                            bidsCont.innerHTML += `
+                                <div class="bid-card p-6 shadow-sm flex justify-between items-center">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-user-gear text-slate-400"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-900">${bid.providerName}</p>
+                                            <p class="text-xs font-bold text-green-600">تقييم: ⭐ 4.9</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-left flex items-center gap-6">
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-400">السعر المعروض</p>
+                                            <p class="text-xl font-900 text-blue-600">${bid.price} ج.م</p>
+                                        </div>
+                                        <button onclick="acceptBid('${bid.providerId}', '${bid.price}')" class="bg-slate-900 text-white px-6 py-3 rounded-xl font-900 hover:bg-blue-600">قبول</button>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        bidsCont.innerHTML = '<p class="text-center py-10 text-slate-400 font-bold">لا توجد عروض حتى الآن.</p>';
+                    }
+                }
+            });
+        }
+
+        window.acceptBid = async (providerId, price) => {
+            if(confirm('هل تريد قبول هذا العرض؟ سيتم التواصل مع الفني فوراً.')) {
+                try {
+                    await updateDoc(doc(db, "orders", orderId), {
+                        status: 'accepted',
+                        acceptedProvider: providerId,
+                        finalPrice: price
+                    });
+                    alert("تم قبول العرض! الفني في طريقه إليك.");
+                } catch (err) { alert(err.message); }
+            }
+        };
+    </script>
+</body>
+</html>

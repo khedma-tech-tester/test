@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أنت غير متصل | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body { background: #020617; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .offline-blob {
+            background: linear-gradient(135deg, #2563eb 0%, #1e293b 100%);
+            width: 300px; height: 300px; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: morph 8s ease-in-out infinite;
+            display: flex; align-items: center; justify-content: center;
+        }
+        @keyframes morph {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            50% { border-radius: 60% 40% 30% 70% / 50% 30% 70% 40%; }
+            100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        }
+    </style>
+</head>
+<body class="p-6 text-center">
+    <div class="space-y-10">
+        <div class="relative flex justify-center">
+            <div class="offline-blob opacity-20 absolute"></div>
+            <i class="fas fa-wifi-slash text-7xl text-blue-500 relative z-10 animate-pulse"></i>
+        </div>
+
+        <div>
+            <h1 class="text-3xl font-900 mb-4">أوبس! انقطع الاتصال</h1>
+            <p class="text-slate-400 font-bold max-w-xs mx-auto">يبدو أنك تواجه مشكلة في الإنترنت، لا تقلق.. سنكون هنا فور عودة الإشارة!</p>
+        </div>
+
+        <div class="flex flex-col gap-4 max-w-xs mx-auto">
+            <button onclick="window.location.reload()" class="bg-blue-600 py-4 rounded-2xl font-900 text-lg shadow-xl shadow-blue-900/40">حاول مرة أخرى</button>
+            <a href="tel:010XXXXXXXX" class="border border-slate-700 py-4 rounded-2xl font-bold text-slate-300">اتصل بنا هاتفياً (طوارئ)</a>
+        </div>
+    </div>
+
+    <script>
+        // التحقق التلقائي عند عودة الإنترنت
+        window.addEventListener('online', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

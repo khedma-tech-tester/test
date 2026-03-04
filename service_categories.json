@@ -1,0 +1,46 @@
+{
+  "categories": [
+    {
+      "id": "plumbing",
+      "name": "السباكة الذكية",
+      "icon": "fa-faucet-drip",
+      "min_price": 100,
+      "description": "إصلاح تسريبات، تركيب أدوات صحية، وصيانة مواتير",
+      "color": "#2563eb"
+    },
+    {
+      "id": "electricity",
+      "name": "الكهرباء والإضاءة",
+      "icon": "fa-bolt",
+      "min_price": 80,
+      "description": "تصليح أعطال، تركيب كشافات، وتمديد أسلاك",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "detergents",
+      "name": "مول المنظفات",
+      "icon": "fa-flask-vial",
+      "min_price": 20,
+      "description": "منظفات خام، صابون سائل، ومواد تعقيم",
+      "color": "#059669"
+    },
+    {
+      "id": "air_conditioning",
+      "name": "تكييف وتبريد",
+      "icon": "fa-snowflake",
+      "min_price": 250,
+      "description": "شحن فريون، تنظيف فلاتر، وصيانة دورية",
+      "color": "#38bdf8"
+    },
+    {
+      "id": "carpentry",
+      "name": "نجارة وأثاث",
+      "icon": "fa-hammer",
+      "min_price": 150,
+      "description": "إصلاح أبواب، تركيب مقابض، وتجميع غرف",
+      "color": "#b45309"
+    }
+  ],
+  "location_scope": "Mansoura, Egypt",
+  "currency": "EGP"
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة مخزن المنظفات | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; }
+        body { background: #0f172a; color: white; }
+        .barrel-container { background: #1e293b; border-radius: 2rem; padding: 2rem; border: 1px solid #334155; }
+        .liquid-fill { transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="p-8">
+    <h1 class="text-3xl font-900 mb-10 text-center">مستوى المواد الخام <span class="text-blue-500">بالمصنع</span></h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        
+        <div class="barrel-container text-center">
+            <h3 class="text-xl font-900 mb-6 text-blue-400">صابون سائل مركّز</h3>
+            <div class="relative w-24 h-40 bg-slate-800 mx-auto rounded-t-lg rounded-b-3xl border-4 border-slate-700 overflow-hidden">
+                <div id="fill-soap" class="liquid-fill absolute bottom-0 w-full bg-blue-600" style="height: 75%;"></div>
+            </div>
+            <p class="mt-6 font-black text-2xl">750 <span class="text-sm">لتر</span></p>
+            <div class="text-[10px] text-slate-500 font-bold mt-2">السعة الكلية: 1000 لتر</div>
+        </div>
+
+        <div class="barrel-container text-center">
+            <h3 class="text-xl font-900 mb-6 text-green-400">كلور (خام 12%)</h3>
+            <div class="relative w-24 h-40 bg-slate-800 mx-auto rounded-t-lg rounded-b-3xl border-4 border-slate-700 overflow-hidden">
+                <div id="fill-chlorine" class="liquid-fill absolute bottom-0 w-full bg-green-500" style="height: 20%;"></div>
+            </div>
+            <p class="mt-6 font-black text-2xl text-red-500 animate-pulse">200 <span class="text-sm">لتر</span></p>
+            <div class="text-[10px] text-red-400 font-black mt-2">⚠️ يحتاج إعادة ملء فوراً</div>
+        </div>
+
+        <div class="barrel-container text-center">
+            <h3 class="text-xl font-900 mb-6 text-yellow-400">مطهرات (ديتول)</h3>
+            <div class="relative w-24 h-40 bg-slate-800 mx-auto rounded-t-lg rounded-b-3xl border-4 border-slate-700 overflow-hidden">
+                <div id="fill-detol" class="liquid-fill absolute bottom-0 w-full bg-yellow-600" style="height: 45%;"></div>
+            </div>
+            <p class="mt-6 font-black text-2xl">450 <span class="text-sm">لتر</span></p>
+            <div class="text-[10px] text-slate-500 font-bold mt-2">السعة الكلية: 1000 لتر</div>
+        </div>
+
+    </div>
+</body>
+</html>

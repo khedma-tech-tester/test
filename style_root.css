@@ -1,0 +1,85 @@
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary: #0f172a;
+    --accent: #38bdf8;
+    --success: #059669;
+    --danger: #ef4444;
+    --bg-dark: #020617;
+    --card-dark: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --radius-xl: 2.5rem;
+    --shadow-main: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.khedma-glass {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 1.25rem;
+    font-weight: 900;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+.input-khedma {
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px solid transparent;
+    border-radius: 1.5rem;
+    padding: 1.25rem;
+    color: white;
+    width: 100%;
+    outline: none;
+}
+
+.input-khedma:focus {
+    border-color: var(--primary);
+    background: rgba(30, 41, 59, 0.8);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--card-dark);
+    border-radius: 10px;
+}
+
+.text-gradient {
+    background: linear-gradient(to right, #38bdf8, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام المزايدة الذكي | خِدمة تك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        body { background: #f8fafc; color: #0f172a; }
+        .order-card { background: white; border: 1.5px solid #e2e8f0; border-radius: 2.5rem; overflow: hidden; }
+        .input-box { background: #f1f5f9; border: 2px solid transparent; width: 100%; padding: 1rem; border-radius: 1.25rem; outline: none; font-weight: 700; }
+        .input-box:focus { border-color: #2563eb; background: white; }
+        .bid-badge { background: #2563eb10; color: #2563eb; padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 900; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <nav class="bg-white border-b border-slate-200 p-6 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <button onclick="history.back()" class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 hover:bg-blue-600 hover:text-white">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <h1 class="text-2xl font-900 tracking-tighter text-blue-600">نظام المزايدة</h1>
+            <div class="w-12 h-12"></div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6 space-y-12 pb-32">
+        <section class="order-card p-8 md:p-12 shadow-sm border-blue-100">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-900">إنشاء طلب جديد</h2>
+                    <p class="text-slate-400 font-bold text-sm uppercase">اكتب مشكلتك وسيب الباقي علينا</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-black text-slate-500 mb-3">نوع الخدمة</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="selectService('سباكة')" class="service-btn p-4 border-2 border-slate-100 rounded-2xl font-bold hover:border-blue-600 hover:bg-blue-50">سباكة</button>
+                        <button onclick="selectService('كهرباء')" class="service-btn p-4 border-2 border-slate-100 rounded-2xl font-bold hover:border-blue-600 hover:bg-blue-50">كهرباء</button>
+                        <button onclick="selectService('تكييف')" class="service-btn p-4 border-2 border-slate-100 rounded-2xl font-bold hover:border-blue-600 hover:bg-blue-50">تكييف</button>
+                        <button onclick="selectService('أخرى')" class="service-btn p-4 border-2 border-slate-100 rounded-2xl font-bold hover:border-blue-600 hover:bg-blue-50">أخرى</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-black text-slate-500 mb-3">وصف المشكلة بالتفصيل</label>
+                    <textarea id="issue-desc" rows="4" class="input-box" placeholder="مثلاً: عندي حنفية المطبخ بتسرب ميه ومحتاجة تغيير قلب..."></textarea>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-black text-slate-500 mb-3">العنوان بالتفصيل</label>
+                        <input type="text" id="user-address" class="input-box" placeholder="المنصورة - حي الجامعة">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-black text-slate-500 mb-3">ميزانيتك التقريبية (ج.م)</label>
+                        <input type="number" id="user-budget" class="input-box" placeholder="السعر اللي يناسبك">
+                    </div>
+                </div>
+
+                <button onclick="submitOrder()" class="w-full py-6 bg-slate-900 text-white rounded-[2rem] font-900 text-xl shadow-2xl hover:bg-blue-600 transition-all">نشر الطلب واستقبال العروض</button>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <h3 class="text-2xl font-900 flex items-center gap-3">
+                <i class="fas fa-list-check text-blue-600"></i>
+                طلباتك الحالية
+            </h3>
+            <div id="my-orders-list" class="space-y-4"></div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let selectedService = '';
+
+        window.selectService = (s) => {
+            selectedService = s;
+            document.querySelectorAll('.service-btn').forEach(b => b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600'));
+            event.target.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+        };
+
+        window.submitOrder = async () => {
+            const user = auth.currentUser;
+            if(!user) return alert("سجل دخول أولاً!");
+            
+            const desc = document.getElementById('issue-desc').value;
+            const addr = document.getElementById('user-address').value;
+            const budget = document.getElementById('user-budget').value;
+
+            if(!selectedService || !desc) return alert("اكمل البيانات");
+
+            try {
+                await addDoc(collection(db, "orders"), {
+                    userId: user.uid,
+                    service: selectedService,
+                    description: desc,
+                    address: addr,
+                    budget: budget,
+                    status: 'pending',
+                    timestamp: serverTimestamp(),
+                    bidsCount: 0
+                });
+                alert("تم نشر طلبك! الفنيين هيشوفوه دلوقتي ويبعتولك عروض.");
+                location.reload();
+            } catch (err) { alert(err.message); }
+        };
+
+        auth.onAuthStateChanged(user => {
+            if(user) {
+                const q = query(collection(db, "orders"), where("userId", "==", user.uid));
+                onSnapshot(q, (snapshot) => {
+                    const list = document.getElementById('my-orders-list');
+                    list.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        list.innerHTML += `
+                            <div class="order-card p-6 flex justify-between items-center">
+                                <div>
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <span class="bid-badge">${data.service}</span>
+                                        <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">${data.status === 'pending' ? 'بانتظار العروض' : 'تم التنفيذ'}</span>
+                                    </div>
+                                    <h4 class="font-black text-lg">${data.description.substring(0, 40)}...</h4>
+                                    <p class="text-xs text-slate-400 font-bold">${data.address}</p>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-blue-600 font-900">${data.bidsCount} عروض</p>
+                                    <button onclick="window.location.href='order_details.html?id=${doc.id}'" class="text-xs font-black underline mt-2">عرض التفاصيل</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

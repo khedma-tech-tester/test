@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>خِدمة تك | التطبيق الشامل للمنصورة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" id="modular-styles">
+    <style>
+        * {
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .font-black { font-weight: 900 !important; }
+        .font-main { font-weight: 600 !important; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb {
+            background: #2563eb;
+            border-radius: 10px;
+            border: 2px solid #f8fafc;
+        }
+
+        .nav-item {
+            font-weight: 900;
+            color: #64748b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .nav-item:hover { color: #2563eb; transform: translateY(-1px); }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: width 0.3s ease;
+        }
+        .nav-item:hover::after { width: 100%; }
+
+        .reveal-left { opacity: 0; transform: translateX(50px); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal-right { opacity: 0; transform: translateX(-50px); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .scale-up { opacity: 0; transform: scale(0.9); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .reveal-left.active, .reveal-right.active, .scale-up.active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        .service-box {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(241, 245, 249, 1);
+        }
+
+        .service-box:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .invest-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800 overflow-x-hidden">
+
+    <div id="loader" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center transition-all duration-1000">
+        <div class="relative w-24 h-24 mb-4">
+            <div class="absolute inset-0 border-8 border-blue-50 rounded-full"></div>
+            <div class="absolute inset-0 border-8 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+            <i class="fas fa-bolt absolute inset-0 flex items-center justify-center text-3xl text-blue-600 animate-pulse"></i>
+        </div>
+        <h2 class="text-2xl font-black text-blue-600 tracking-tighter">خِدمة تك</h2>
+        <p class="text-[10px] font-black text-slate-400 mt-2 uppercase tracking-[0.3em]">Mansoura Future Hub</p>
+    </div>
+
+    <nav class="fixed top-0 w-full z-[100] bg-white/90 backdrop-blur-xl border-b border-slate-100 h-20 transition-all duration-500">
+        <div class="max-w-[1400px] mx-auto h-full px-6 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-200 rotate-3">
+                    <i class="fas fa-wrench text-white text-2xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black text-slate-900 leading-none tracking-tighter">خِدمة <span class="text-blue-600">تك</span></span>
+                    <span class="text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase">Mansoura Hub</span>
+                </div>
+            </div>
+
+            <div class="hidden xl:flex items-center gap-8">
+                <a href="#services" class="nav-item">الخدمات</a>
+                <a href="#invest" class="nav-item">استثمار</a>
+                <a href="#gaming" class="nav-item">ألعاب</a>
+                <a href="#mall" class="nav-item">المول</a>
+                <a href="#fawry" class="nav-item">فوري</a>
+                <a href="#ai" class="nav-item">الذكاء الاصطناعي</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <i class="fas fa-wallet text-green-500"></i>
+                    <span id="top-wallet" class="font-black text-sm">جاري التحميل...</span>
+                </div>
+                <button id="main-auth-btn" onclick="window.location.href='client_gate.html'" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-black shadow-2xl shadow-blue-200 hover:-translate-y-1 active:scale-95 transition-all">حسابي</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20">
+        <section class="relative min-h-[90vh] flex items-center px-6 overflow-hidden">
+            <div class="absolute top-20 right-0 w-[600px] h-[600px] bg-blue-50 rounded-full blur-[120px] -z-10 opacity-60"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-50 rounded-full blur-[100px] -z-10 opacity-60"></div>
+            
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20 items-center w-full">
+                <div class="reveal-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-xs font-black mb-8 animate-bounce">
+                        <span class="flex h-2 w-2 rounded-full bg-blue-600"></span>
+                        أكبر تطبيق خدمات في المنصورة
+                    </div>
+                    <h1 class="text-6xl lg:text-8xl font-black text-slate-900 leading-[1.1] mb-8 tracking-tighter">
+                        كل خدماتك <br> في تطبيق <span class="text-blue-600 relative">واحد
+                            <svg class="absolute -bottom-2 left-0 w-full" height="12" viewBox="0 0 200 12" fill="none"><path d="M4 8C40 2 160 2 196 8" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/></svg>
+                        </span>
+                    </h1>
+                    <p class="text-xl text-slate-500 leading-relaxed mb-12 max-w-xl font-main">
+                        من صيانة بيتك لاستثمار فلوسك، ومن شحن الألعاب للمنظفات. خِدمة تك بتوفرلك كل ده بضمان المنصورة وبضغطة زرار واحدة.
+                    </p>
+                    <div class="flex flex-wrap gap-6">
+                        <button onclick="window.location.href='client_gate.html'" class="px-12 py-6 bg-slate-900 text-white rounded-[2.5rem] font-black text-lg hover:bg-blue-600 hover:shadow-2xl hover:shadow-blue-200 transition-all flex items-center gap-4 group">
+                            ابدأ رحلتك الآن
+                            <i class="fas fa-arrow-left group-hover:-translate-x-2 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative reveal-right">
+                    <div class="relative z-10 scale-up">
+                        <img src="https://img.freepik.com/free-photo/handsome-manual-worker-looking-camera-isolated-white_231208-1110.jpg" class="rounded-[4rem] shadow-2xl border-[12px] border-white animate-float w-full">
+                        
+                        <div class="absolute -top-10 -right-10 glass-card p-6 rounded-[2.5rem] shadow-2xl border border-white/50 z-20 animate-float" style="animation-delay: -2s">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-green-200">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-black text-slate-400">نظام المزايدة</p>
+                                    <p class="text-lg font-black text-slate-800">حدد سعرك بنفسك</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute -bottom-10 -left-10 glass-card p-6 rounded-[2.5rem] shadow-2xl border border-white/50 z-20 animate-float" style="animation-delay: -4s">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-orange-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-orange-200">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-black text-slate-400">خِدمة استثمار</p>
+                                    <p class="text-lg font-black text-slate-800">نمي فلوسك بأمان</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-32 px-6 bg-slate-50/50">
+            <div class="max-w-[1400px] mx-auto">
+                <div class="text-center mb-24 reveal-left">
+                    <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tighter">الخدمات المنزلية الذكية</h2>
+                    <p class="text-slate-500 font-main text-xl max-w-2xl mx-auto">نظام المزايدة: ابعت طلبك، واستقبل عروض من الفنيين واختار السعر اللي يريحك!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div onclick="window.location.href='booking_system.html'" class="service-box bg-white p-12 rounded-[4rem] group cursor-pointer relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-[5rem] -z-0 transition-all group-hover:scale-110"></div>
+                        <div class="relative z-10">
+                            <div class="w-20 h-20 bg-blue-600 rounded-[2rem] flex items-center justify-center text-3xl text-white mb-10 shadow-xl shadow-blue-200">
+                                <i class="fas fa-faucet-drip"></i>
+                            </div>
+                            <h3 class="text-3xl font-black text-slate-900 mb-6">سباكة ذكية</h3>
+                            <p class="text-slate-500 font-main leading-relaxed mb-8">تأسيس وصيانة سباكة بنظام المزايدة. صور المشكلة واستنى العروض.</p>
+                            <div class="flex items-center gap-3 text-blue-600 font-black group-hover:gap-5 transition-all">
+                                <span>اطلب عرض سعر</span>
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div onclick="window.location.href='booking_system.html'" class="service-box bg-white p-12 rounded-[4rem] group cursor-pointer relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-[5rem] -z-0"></div>
+                        <div class="relative z-10">
+                            <div class="w-20 h-20 bg-orange-500 rounded-[2rem] flex items-center justify-center text-3xl text-white mb-10 shadow-xl shadow-orange-200">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="text-3xl font-black text-slate-900 mb-6">كهرباء وأنظمة</h3>
+                            <p class="text-slate-500 font-main leading-relaxed mb-8">صيانة كهرباء وتركيب أنظمة سمارت هوم. متاح تقسيط المصنعية.</p>
+                            <div class="flex items-center gap-3 text-orange-600 font-black group-hover:gap-5 transition-all">
+                                <span>اطلب فني الآن</span>
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div onclick="window.location.href='mall.html'" class="service-box bg-white p-12 rounded-[4rem] group cursor-pointer relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-[5rem] -z-0"></div>
+                        <div class="relative z-10">
+                            <div class="w-20 h-20 bg-green-600 rounded-[2rem] flex items-center justify-center text-3xl text-white mb-10 shadow-xl shadow-green-200">
+                                <i class="fas fa-pump-soap"></i>
+                            </div>
+                            <h3 class="text-3xl font-black text-slate-900 mb-6">مول المنظفات</h3>
+                            <p class="text-slate-500 font-main leading-relaxed mb-8">منظفات بتركيبات خاصة وسر عالي. اشتري دلوقتي وادفع عند الاستلام.</p>
+                            <div class="flex items-center gap-3 text-green-600 font-black group-hover:gap-5 transition-all">
+                                <span>تسوق الآن</span>
+                                <i class="fas fa-arrow-left"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="invest" class="py-32 px-6 bg-slate-900 text-white overflow-hidden relative">
+            <div class="max-w-[1400px] mx-auto">
+                <div class="grid lg:grid-cols-2 gap-20 items-center">
+                    <div class="reveal-right">
+                        <h2 class="text-5xl lg:text-7xl font-black mb-10 leading-tight">استثمر فلوسك <br> بذكاء 📈</h2>
+                        <p class="text-slate-400 text-xl font-main mb-12">خِدمة استثمار بتسمحلك تشتري ذهب أو تدخل في صناديق استثمارية بعائد شهري، كل ده من موبايلك في المنصورة.</p>
+                        
+                        <div class="space-y-6">
+                            <div class="invest-card p-6 rounded-3xl flex items-center justify-between border border-white/10">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-yellow-500/20 text-yellow-500 rounded-2xl flex items-center justify-center text-xl">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-black">صندوق الذهب المصري</p>
+                                        <p class="text-xs text-slate-500">أقل مخاطرة</p>
+                                    </div>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-green-500 font-black" id="gold-return">+0.0%</p>
+                                    <p class="text-[10px] text-slate-500 uppercase">سنويًا</p>
+                                </div>
+                            </div>
+                            
+                            <div class="invest-card p-6 rounded-3xl flex items-center justify-between border border-white/10">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-blue-500/20 text-blue-500 rounded-2xl flex items-center justify-center text-xl">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-black">صندوق النمو التكنولوجي</p>
+                                        <p class="text-xs text-slate-500">مخاطرة متوسطة</p>
+                                    </div>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-green-500 font-black" id="tech-return">+0.0%</p>
+                                    <p class="text-[10px] text-slate-500 uppercase">سنويًا</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal-left flex justify-center">
+                        <div class="w-full max-w-md bg-white p-10 rounded-[4rem] text-slate-900 shadow-2xl relative">
+                            <div class="absolute -top-5 -left-5 w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl shadow-xl">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h4 class="text-2xl font-black mb-6 mt-6">محفظة استثمارك</h4>
+                            <div class="h-[2px] bg-slate-100 mb-8"></div>
+                            <p class="text-slate-400 font-black text-sm mb-2 uppercase">إجمالي الرصيد</p>
+                            <p id="main-balance" class="text-4xl font-black mb-10 tracking-tighter">جاري المزامنة... <span class="text-sm text-slate-400">ج.م</span></p>
+                            <button class="w-full py-6 bg-slate-900 text-white rounded-[2rem] font-black text-lg shadow-xl hover:bg-blue-600 transition-all">إضافة أموال للمحفظة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gaming" class="py-32 px-6">
+            <div class="max-w-[1400px] mx-auto text-center mb-24">
+                <h2 class="text-5xl font-black text-slate-900 mb-6">خِدمة ألعاب 🎮</h2>
+                <p class="text-slate-500 font-main text-xl">اشحن شدات ببجي، جواهر فري فاير، أو كريدت فالورانت في ثواني بالـ ID بتاعك.</p>
+            </div>
+            
+            <div class="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="service-box p-8 rounded-[3rem] text-center bg-white group hover:bg-slate-900 hover:text-white cursor-pointer">
+                    <img src="https://logowik.com/content/uploads/images/pubg-mobile5645.jpg" class="w-20 h-20 rounded-2xl mx-auto mb-6 group-hover:scale-110 transition-transform object-cover">
+                    <p class="font-black mb-2">PUBG Mobile</p>
+                    <p class="text-blue-600 font-black text-sm">شحن فوري</p>
+                </div>
+                <div class="service-box p-8 rounded-[3rem] text-center bg-white group hover:bg-slate-900 hover:text-white cursor-pointer">
+                    <img src="https://e7.pngegg.com/pngimages/611/878/png-clipart-logo-free-fire-battlegrounds-video-game-free-fire-text-logo.png" class="w-20 h-20 rounded-2xl mx-auto mb-6 group-hover:scale-110 transition-transform object-cover">
+                    <p class="font-black mb-2">Free Fire</p>
+                    <p class="text-blue-600 font-black text-sm">شحن فوري</p>
+                </div>
+                <div class="service-box p-8 rounded-[3rem] text-center bg-white group hover:bg-slate-900 hover:text-white cursor-pointer">
+                    <img src="https://w7.pngwing.com/pngs/351/421/png-transparent-valorant-white-logo-gaming.png" class="w-20 h-20 rounded-2xl mx-auto mb-6 group-hover:scale-110 transition-transform object-cover">
+                    <p class="font-black mb-2">Valorant</p>
+                    <p class="text-blue-600 font-black text-sm">شحن فوري</p>
+                </div>
+                <div class="service-box p-8 rounded-[3rem] text-center bg-white group hover:bg-slate-900 hover:text-white cursor-pointer">
+                    <img src="https://w7.pngwing.com/pngs/237/679/png-transparent-roblox-logo.png" class="w-20 h-20 rounded-2xl mx-auto mb-6 group-hover:scale-110 transition-transform object-cover">
+                    <p class="font-black mb-2">Roblox</p>
+                    <p class="text-blue-600 font-black text-sm">شحن فوري</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai" class="py-32 px-6 bg-slate-50">
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal-right order-2 lg:order-1">
+                    <div class="p-12 bg-white rounded-[4rem] border border-slate-100 relative group shadow-sm">
+                        <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-600 rounded-full flex items-center justify-center text-white text-6xl shadow-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-barcode"></i>
+                        </div>
+                        <h3 class="text-4xl font-black mb-6 mt-10">كاشف المقاطعة الذكي</h3>
+                        <p class="text-slate-500 font-main text-xl leading-relaxed">افتح الكاميرا وصور أي منتج، والذكاء الاصطناعي هيقولك ده مقاطعة ولا لأ، وكمان هيقترحلك بدائل مصرية.</p>
+                        <button onclick="startAICamera()" class="mt-8 px-10 py-5 bg-slate-900 text-white rounded-3xl font-black hover:bg-blue-600 transition-all">جرب المسح الآن</button>
+                    </div>
+                </div>
+                <div class="reveal-left order-1 lg:order-2">
+                    <span class="text-blue-600 font-black tracking-widest uppercase block mb-6 italic">ذكاء اصطناعي 2026</span>
+                    <h2 class="text-5xl lg:text-7xl font-black mb-8 leading-tight">تكنولوجيا بتخدم <br> مبادئك.</h2>
+                    <p class="text-slate-500 font-main text-xl">خِدمة تك مش بس بيصلح أعطال، ده بيساعدك تاخد قرارات شرائية ذكية تدعم بلدك.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="fawry" class="py-32 px-6 bg-slate-900 mx-4 my-20 rounded-[5rem] overflow-hidden relative">
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal-left">
+                    <h2 class="text-5xl lg:text-7xl font-black text-white mb-10 leading-tight">شحن وفواتير <br> في لحظة ⚡</h2>
+                    <p class="text-slate-400 text-xl font-main mb-12">ادفع فواتير الكهرباء، المية، الغاز، وشحن رصيد الموبايل والانترنت لكل الشركات من مكانك.</p>
+                </div>
+                <div class="reveal-right flex justify-center">
+                    <div class="w-full max-w-md bg-white p-12 rounded-[4rem] shadow-2xl rotate-3">
+                        <img src="https://fawry.com/wp-content/uploads/2019/06/fawry-logo.png" class="h-16 mb-10">
+                        <div class="space-y-6">
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                                <p class="text-[10px] font-black text-slate-400 mb-2 uppercase">أدخل رقم الموبايل أو الكود</p>
+                                <input id="fawry-input" type="tel" placeholder="010XXXXXXXX" class="w-full bg-transparent outline-none font-black text-xl">
+                            </div>
+                            <button onclick="processFawry()" class="w-full py-6 bg-blue-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-blue-200">ادفع الآن</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-50 pt-32 pb-12 border-t border-slate-100">
+        <div class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20">
+            <div class="space-y-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-200 rotate-3">
+                        <i class="fas fa-wrench text-white text-2xl"></i>
+                    </div>
+                    <span class="text-2xl font-black text-slate-900 tracking-tighter">خِدمة <span class="text-blue-600">تك</span></span>
+                </div>
+                <p class="text-slate-400 font-main leading-relaxed italic text-sm">خِدمة تك هي المنصة الأولى والوحيدة في المنصورة التي تدمج الخدمات المنزلية بالاستثمار والترفيه في تطبيق واحد ذكي.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm hover:shadow-xl transition-all"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm hover:shadow-xl transition-all"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm hover:shadow-xl transition-all"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="text-xl font-black mb-10">أقسام التطبيق</h5>
+                <ul class="space-y-4 font-main text-slate-500 text-sm">
+                    <li><a href="#services" class="hover:text-blue-600">خِدمة صيانة (مزايدة)</a></li>
+                    <li><a href="#invest" class="hover:text-blue-600">خِدمة استثمار</a></li>
+                    <li><a href="#gaming" class="hover:text-blue-600">خِدمة ألعاب</a></li>
+                    <li><a href="#mall" class="hover:text-blue-600">خِدمة مول</a></li>
+                    <li><a href="#fawry" class="hover:text-blue-600">فوري تك</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="text-xl font-black mb-10">الشركة والشركاء</h5>
+                <ul class="space-y-4 font-main text-slate-500 text-sm">
+                    <li><a href="#" class="hover:text-blue-600">من نحن</a></li>
+                    <li><a href="#" class="hover:text-blue-600">انضم كفني محترف</a></li>
+                    <li><a href="#" class="hover:text-blue-600">سياسة الأمان والضمان</a></li>
+                    <li><a href="#" class="hover:text-blue-600">تواصل مع الإدارة</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h5 class="text-xl font-black mb-10">المقر الرئيسي</h5>
+                <p class="text-slate-400 font-main mb-6 text-sm">المنصورة، الدقهلية، مصر <br> شارع المشاية السفلية - أمام نادي جزيرة الورد</p>
+                <div class="bg-blue-600 p-8 rounded-[3rem] text-white shadow-2xl">
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-2">الدعم الفني والشكاوى</p>
+                    <p class="text-2xl font-black italic">010XXXXXXXXX</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-[1400px] mx-auto px-6 mt-24 pt-10 border-t border-slate-200 text-center">
+            <p class="text-slate-400 font-black text-xs italic uppercase tracking-widest">© 2026 خِدمة تك - Mansoura Super App Project</p>
+        </div>
+    </footer>
+
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] md:hidden w-[90%] bg-white/95 backdrop-blur-2xl h-22 rounded-[3rem] shadow-2xl border border-slate-100 flex items-center justify-around px-8">
+        <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-1 text-blue-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-[10px] font-black uppercase">الرئيسية</span>
+        </button>
+        <button onclick="location.href='#invest'" class="flex flex-col items-center gap-1 text-slate-400">
+            <i class="fas fa-chart-line text-xl"></i>
+            <span class="text-[10px] font-black uppercase">استثمار</span>
+        </button>
+        <button onclick="startAICamera()" class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl shadow-xl shadow-blue-200 border-4 border-white -mt-12 transition-transform active:scale-90">
+            <i class="fas fa-qrcode"></i>
+        </button>
+        <button onclick="location.href='#gaming'" class="flex flex-col items-center gap-1 text-slate-400">
+            <i class="fas fa-gamepad text-xl"></i>
+            <span class="text-[10px] font-black uppercase">ألعاب</span>
+        </button>
+        <button onclick="location.href='client_gate.html'" class="flex flex-col items-center gap-1 text-slate-400">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-[10px] font-black uppercase">حسابي</span>
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // إعدادات Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkRJZ1YwN8Hqn501hAWwWeBI8_1x3o2Pk",
+            authDomain: "khedma-tech-tester.firebaseapp.com",
+            projectId: "khedma-tech-tester",
+            storageBucket: "khedma-tech-tester.firebasestorage.app",
+            messagingSenderId: "51468270453",
+            appId: "1:51468270453:web:ec2e1cb0de753eceeab13c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // نظام تحميل الملفات الموسع (يدعم حتى 1000 ملف خارجي)
+        window.KhedmaScale = {
+            loadModule: function(type, url) {
+                if(type === 'js') {
+                    let script = document.createElement('script');
+                    script.src = url;
+                    document.body.appendChild(script);
+                } else if(type === 'css') {
+                    let link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = url;
+                    document.head.appendChild(link);
+                }
+            },
+            // دالة لجلب البيانات الإحصائية الحقيقية من Firebase لضمان واقعية الأرقام
+            syncGlobalStats: async function() {
+                const statsDoc = await getDoc(doc(db, "app_settings", "global_stats"));
+                if (statsDoc.exists()) {
+                    const stats = statsDoc.data();
+                    document.getElementById('gold-return').innerText = `+${stats.gold_return}%`;
+                    document.getElementById('tech-return').innerText = `+${stats.tech_return}%`;
+                }
+            }
+        };
+
+        // Real-time Wallet & User Sync
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('main-auth-btn').innerText = "لوحة التحكم";
+                onSnapshot(doc(db, "users", user.uid), (doc) => {
+                    const data = doc.data();
+                    const balance = data?.wallet || 0;
+                    const formatted = new Intl.NumberFormat('ar-EG').format(balance);
+                    document.getElementById('top-wallet').innerText = formatted + " ج.م";
+                    if(document.getElementById('main-balance')) {
+                        document.getElementById('main-balance').innerHTML = `${formatted} <span class="text-sm text-slate-400">ج.م</span>`;
+                    }
+                });
+            } else {
+                document.getElementById('top-wallet').innerText = "زائر";
+                document.getElementById('main-balance').innerText = "0.00";
+            }
+        });
+
+        // تشغيل المزامنة العالمية
+        KhedmaScale.syncGlobalStats();
+    </script>
+
+    <script>
+        // Core UI Handlers
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 1000);
+            }, 1000);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-left, .reveal-right, .scale-up').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('h-16', 'shadow-xl');
+                nav.classList.remove('h-20');
+            } else {
+                nav.classList.add('h-20');
+                nav.classList.remove('h-16', 'shadow-xl');
+            }
+        });
+
+        // Functional Logic
+        function processFawry() {
+            const input = document.getElementById('fawry-input').value;
+            if(input.length < 11) {
+                alert("برجاء إدخال رقم هاتف أو كود دفع صحيح");
+            } else {
+                alert("جاري الاتصال بسيرفر فوري...");
+            }
+        }
+
+        async function startAICamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                alert("تم تفعيل الكاميرا.. جاري تشغيل كاشف المقاطعة الذكي (موديل 2026)");
+            } catch (err) {
+                alert("يرجى إعطاء صلاحية الكاميرا للمسح الذكي");
+            }
+        }
+    </script>
+</body>
+</html>
